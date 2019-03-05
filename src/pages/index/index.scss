@@ -1,0 +1,11 @@
+@import '../../assets/styles/common.scss';
+
+.index {
+  .index-header {
+    height: 200px;
+    background-color: $theme-blue-dark;
+
+    @include flex();
+  }
+}
+
