@@ -4,6 +4,7 @@ import { Provider } from '@tarojs/mobx'
 import Index from './pages/index'
 
 import counterStore from './store/counter'
+import blogStore from './store/blog'
 
 import 'taro-ui/dist/style/index.scss'
 
@@ -16,7 +17,8 @@ import './app.scss'
 // }
 
 const store = {
-  counterStore
+  counterStore,
+  blogStore
 }
 
 class App extends Component {
@@ -31,7 +33,8 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/index/index',
-      'pages/appointment/index'
+      'pages/appointment/index',
+      'pages/blog/index'
     ],
     window: {
       backgroundTextStyle: 'light',

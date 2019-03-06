@@ -207,6 +207,13 @@
     component-type "^1.2.1"
     join-component "^1.1.0"
 
+"@tarojs/async-await@^1.2.15":
+  version "1.2.15"
+  resolved "http://registry.npm.taobao.org/@tarojs/async-await/download/@tarojs/async-await-1.2.15.tgz#bd093cfe03ac3a1e3323d3676243bc9c7737ab2c"
+  dependencies:
+    promise-polyfill "^7.1.2"
+    regenerator-runtime "^0.11.1"
+
 "@tarojs/components@1.2.15":
   version "1.2.15"
   resolved "http://registry.npm.taobao.org/@tarojs/components/download/@tarojs/components-1.2.15.tgz#350f4e4d7b0bff315e14dfedbebc27f2bc49123d"
@@ -5729,6 +5736,10 @@ promise-inflight@^1.0.1:
   version "1.0.1"
   resolved "http://registry.npm.taobao.org/promise-inflight/download/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
 
+promise-polyfill@^7.1.2:
+  version "7.1.2"
+  resolved "http://registry.npm.taobao.org/promise-polyfill/download/promise-polyfill-7.1.2.tgz#ab05301d8c28536301622d69227632269a70ca3b"
+
 promise@^7.1.1:
   version "7.3.1"
   resolved "http://registry.npm.taobao.org/promise/download/promise-7.3.1.tgz#064b72602b18f90f29192b8b1bc418ffd1ebd3bf"
@@ -6054,7 +6065,7 @@ regenerator-runtime@^0.10.5:
   version "0.10.5"
   resolved "http://registry.npm.taobao.org/regenerator-runtime/download/regenerator-runtime-0.10.5.tgz#336c3efc1220adcedda2c9fab67b5a7955a33658"
 
-regenerator-runtime@^0.11.0:
+regenerator-runtime@^0.11.0, regenerator-runtime@^0.11.1:
   version "0.11.1"
   resolved "http://registry.npm.taobao.org/regenerator-runtime/download/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
 

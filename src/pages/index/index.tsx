@@ -14,6 +14,7 @@ import {
 import './index.scss'
 
 import calendarIcon from '../../assets/images/index/calendar.png'
+import blogIcon from '../../assets/images/index/blog.png'
 import notFoundIcon from '../../assets/images/index/404.png'
 
 const toolDataList = [{
@@ -21,8 +22,9 @@ const toolDataList = [{
   pageUrl: '/pages/appointment/index',
   value: '行程安排'
 }, {
-  image: notFoundIcon,
-  value: '待开放'
+  image: blogIcon,
+  pageUrl: '/pages/blog/index',
+  value: '博客'
 }, {
   image: notFoundIcon,
   value: '待开放'

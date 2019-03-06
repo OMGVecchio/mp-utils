@@ -2,13 +2,14 @@
 	"miniprogramRoot": "dist/",
 	"projectname": "mp-utils",
 	"description": "daily tools for the user",
-	"appid": "",
+	"appid": "wxb7791d1e9388d9b3",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": false,
 		"postcss": false,
 		"minified": false,
-		"newFeature": true
+		"newFeature": true,
+		"autoAudits": false
 	},
 	"compileType": "miniprogram",
 	"condition": {
