@@ -2375,6 +2375,10 @@ dayjs@^1.7.7:
   version "1.8.8"
   resolved "http://registry.npm.taobao.org/dayjs/download/dayjs-1.8.8.tgz#81c81a8bb2488ef859f6c9bead9b62d649072bfd"
 
+dayjs@^1.8.9:
+  version "1.8.9"
+  resolved "http://registry.npm.taobao.org/dayjs/download/dayjs-1.8.9.tgz#8b5fda2f995ff5f29705894e1d23240f7f674f61"
+
 debug@*, debug@^3.1.0, debug@^3.2.5, debug@^3.2.6:
   version "3.2.6"
   resolved "http://registry.npm.taobao.org/debug/download/debug-3.2.6.tgz#e83d17de16d8a7efb7717edbe5fb10135eee629b"

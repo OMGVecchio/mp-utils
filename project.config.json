@@ -29,12 +29,19 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
+			"current": 1,
 			"list": [
 				{
 					"id": 0,
 					"name": "日期行程",
 					"pathName": "pages/appointment/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "博客",
+					"pathName": "pages/blog/index",
 					"query": "",
 					"scene": null
 				}
