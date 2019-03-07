@@ -2371,11 +2371,7 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "http://registry.npm.taobao.org/date-now/download/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
-dayjs@^1.7.7:
-  version "1.8.8"
-  resolved "http://registry.npm.taobao.org/dayjs/download/dayjs-1.8.8.tgz#81c81a8bb2488ef859f6c9bead9b62d649072bfd"
-
-dayjs@^1.8.9:
+dayjs@^1.7.7, dayjs@^1.8.9:
   version "1.8.9"
   resolved "http://registry.npm.taobao.org/dayjs/download/dayjs-1.8.9.tgz#8b5fda2f995ff5f29705894e1d23240f7f674f61"
 
@@ -4664,6 +4660,10 @@ map-visit@^1.0.0:
   resolved "http://registry.npm.taobao.org/map-visit/download/map-visit-1.0.0.tgz#ecdca8f13144e660f1b5bd41f12f3479d98dfb8f"
   dependencies:
     object-visit "^1.0.0"
+
+marked@^0.6.1:
+  version "0.6.1"
+  resolved "http://registry.npm.taobao.org/marked/download/marked-0.6.1.tgz#a63addde477bca9613028de4b2bc3629e53a0562"
 
 match-require@^2.0.0:
   version "2.1.0"

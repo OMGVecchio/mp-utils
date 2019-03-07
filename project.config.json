@@ -29,7 +29,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 1,
+			"current": 2,
 			"list": [
 				{
 					"id": 0,
@@ -43,6 +43,13 @@
 					"name": "博客",
 					"pathName": "pages/blog/index",
 					"query": "",
+					"scene": null
+				},
+				{
+					"id": 2,
+					"name": "博客详情",
+					"pathName": "pages/blog/detail/index",
+					"query": "id=d4cc9350-a43c-11e8-aa26-efc93289f4d5&__key_=15519708074301",
 					"scene": null
 				}
 			]

@@ -1,10 +1,10 @@
 import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
-import { AtCard } from 'taro-ui'
 import { observer, inject } from '@tarojs/mobx'
-import { toJS } from 'mobx'
 import dayjs from 'dayjs'
+
+import Markdown from '../../../components/common/markdown'
 
 import './index.scss'
 
@@ -39,30 +39,29 @@ class ArticleDetail extends Component {
     navigationBarTitleText: '详情'
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { blogStore } = this.props
     const { id } = this.$router.params
     blogStore.fetchArticleDetail(id)
   }
 
-  render () {
+  render() {
     const { blogStore } = this.props
-    const { articleDetail } = blogStore
-    const articleDetailObj = toJS(articleDetail) as any
+    const { id } = this.$router.params
+    const articleDetail = blogStore.articleDetail[String(id)]
+    if (!articleDetail) {
+      return null
+    }
     const {
-      cover,
-      title,
-      createTime,
-      desc,
-      article
-    } = articleDetailObj as ArticleDetailType
-    // console.log(blogStore.get('articleDetail'))
-    console.log(title)
-    console.log(desc)
-    console.log(article)
+      cover = '',
+      title = '',
+      createTime = 0,
+      desc = '',
+      article = ''
+    } = articleDetail as ArticleDetailType
     return (
       <View className="article-detail at-article">
-        <Image src={cover} mode="widthFix" className="at-article__img" />
+        <Image src={`${blogDomain}${cover || '/images/other/404.jpg'}`} mode="aspectFill" className="article-cover" />
         <View className='at-article__h1'>
           <Text>{title}</Text>
         </View>
@@ -73,7 +72,7 @@ class ArticleDetail extends Component {
           <Text>{desc}</Text>
         </View>
         <View className="at-article__p">
-          <Text>{article}</Text>
+          <Markdown source={article} />
         </View>
       </View>
     )

@@ -25,6 +25,7 @@ const config = {
     }
   },
   defineConstants: {
+    "blogDomain": JSON.stringify('https://vecchio.top')
   },
   copy: {
     patterns: [

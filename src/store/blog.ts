@@ -7,6 +7,9 @@ const blogStore = observable({
   articleDetail: {},
   isFetchingDetail: false,
   fetchArticleList() {
+    if (this.articleList.length > 0) {
+      return
+    }
     this.isFetchingList = true
     Taro.request({
       url: 'https://vecchio.top/api/article',
@@ -21,6 +24,9 @@ const blogStore = observable({
     })
   },
   fetchArticleDetail(articleId) {
+    if (this.articleDetail[articleId]) {
+      return
+    }
     this.isFetchingDetail = true
     Taro.request({
       url: `https://vecchio.top/api/article/${articleId}`,
@@ -29,7 +35,10 @@ const blogStore = observable({
         this.isFetchingList = false
       }
     }).then(result => {
-      this.articleDetail[articleId] = JSON.parse(result.data).data
+      this.articleDetail = {
+        ...this.articleDetail,
+        [articleId]: JSON.parse(result.data).data
+      }
     }).catch(e => {
       console.error(e)
     })
