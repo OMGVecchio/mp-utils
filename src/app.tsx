@@ -35,7 +35,10 @@ class App extends Component {
       'pages/index/index',
       'pages/appointment/index',
       'pages/blog/index',
-      'pages/blog/detail/index'
+      'pages/blog/detail/index',
+      'pages/resume/index',
+      'pages/color/index',
+      'pages/filter/index'
     ],
     window: {
       backgroundTextStyle: 'light',

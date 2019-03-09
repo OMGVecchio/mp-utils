@@ -15,6 +15,9 @@ import './index.scss'
 
 import calendarIcon from '../../assets/images/index/calendar.png'
 import blogIcon from '../../assets/images/index/blog.png'
+import resumeIcon from '../../assets/images/index/resume.png'
+import colorIcon from '../../assets/images/index/color.png'
+import filterIcon from '../../assets/images/index/filter.png'
 import notFoundIcon from '../../assets/images/index/404.png'
 
 const toolDataList = [{
@@ -26,14 +29,17 @@ const toolDataList = [{
   pageUrl: '/pages/blog/index',
   value: '博客'
 }, {
-  image: notFoundIcon,
-  value: '待开放'
+  image: resumeIcon,
+  pageUrl: '/pages/resume/index',
+  value: '简历'
 }, {
-  image: notFoundIcon,
-  value: '待开放'
+  image: colorIcon,
+  pageUrl: '/pages/color/index',
+  value: '中国色'
 }, {
-  image: notFoundIcon,
-  value: '待开放'
+  image: filterIcon,
+  pageUrl: '/pages/filter/index',
+  value: '滤镜'
 }, {
   image: notFoundIcon,
   value: '待开放'
