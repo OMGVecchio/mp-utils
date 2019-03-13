@@ -1,0 +1,37 @@
+@import '../../../assets/styles/common.scss';
+
+$circle-size: 80px;
+
+.circle-progress {
+  .circle {
+    position: relative;
+    width: $circle-size;
+    height: $circle-size;
+    text-align: center;
+    .track, .mask, .left, .right {
+      width: $circle-size;
+      height: $circle-size;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 50%;
+      border: 10px #e7e7e7 solid;
+      box-sizing: border-box;
+    }
+    .mask, .left, .right {
+      clip: rect(0 $circle-size/2 $circle-size 0);
+    }
+    .right {
+      opacity: 0;
+      transform: rotate(180deg);
+    }
+    .hour {
+      color: #666;
+      font-size: 30px;
+      line-height: $circle-size;
+    }
+  }
+  .transition-rotate {
+    transition: transform 1s ease-in-out;
+  }
+}

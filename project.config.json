@@ -29,7 +29,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 2,
+			"current": 3,
 			"list": [
 				{
 					"id": 0,
@@ -50,6 +50,13 @@
 					"name": "博客详情",
 					"pathName": "pages/blog/detail/index",
 					"query": "id=d4cc9350-a43c-11e8-aa26-efc93289f4d5&__key_=15519708074301",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "中国色",
+					"pathName": "pages/color/index",
+					"query": "",
 					"scene": null
 				}
 			]

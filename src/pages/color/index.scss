@@ -1,0 +1,56 @@
+@import '../../assets/styles/common.scss';
+
+.color {
+  height: 100vh;
+  @include flex(column);
+  .color-select-wrap {
+    @include flex(row, space-between);
+    flex-shrink: 0;
+    height: 100px;
+    width: 100vw;
+  }
+  .color-cmyk-wrap {
+    padding-left: 10px;
+    width: 360px;
+    @include flex(row, space-between);
+    .color-cmyk-item {
+      flex-shrink: 0;
+    }
+  }
+  .color-rgb-wrap {
+    padding-right: 10px;
+    width: 300px;
+    @include flex(row, space-between);
+    .color-rgb-item {
+      font-size: 30px;
+      flex-shrink: 0;
+    }
+  }
+  .color-list {
+    @include flex(row, space-between);
+    flex-wrap: wrap;
+    overflow: scroll;
+    transition: background-color 1s;
+  }
+  .color-item {
+    @include flex(column, flex-start);
+    margin: 40px 20px 0 20px;
+    font-size: 24px;
+    width: 80px;
+    height: 160px;
+    .color-show {
+      flex-shrink: 0;
+      border-radius: 10px;
+      width: 100%;
+      height: 20px;
+      margin-bottom: 10px;
+    }
+    .color-name {
+      width: 100%;
+      flex-grow: 1;
+      writing-mode: vertical-lr;
+      overflow: hidden;
+      color: #000000;
+    }
+  }
+}
