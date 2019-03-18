@@ -60,7 +60,7 @@ class ArticleDetail extends Component {
       article = ''
     } = articleDetail as ArticleDetailType
     return (
-      <View className="article-detail at-article">
+      <View className="article-detail-page at-article">
         <Image src={`${blogDomain}${cover || '/images/other/404.jpg'}`} mode="aspectFill" className="article-cover" />
         <View className='at-article__h1'>
           <Text>{title}</Text>

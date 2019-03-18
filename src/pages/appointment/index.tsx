@@ -29,7 +29,7 @@ class Appointment extends Component {
 
   render () {
     return (
-      <View className="appointment">
+      <View className="appointment-page">
         <AtCalendar
           isVertical
           onDayClick={this.clickDate}

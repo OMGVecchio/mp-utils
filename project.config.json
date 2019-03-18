@@ -29,7 +29,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 3,
+			"current": 4,
 			"list": [
 				{
 					"id": 0,
@@ -57,6 +57,12 @@
 					"name": "中国色",
 					"pathName": "pages/color/index",
 					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "颜色选择器",
+					"pathName": "pages/color-show/index",
 					"scene": null
 				}
 			]

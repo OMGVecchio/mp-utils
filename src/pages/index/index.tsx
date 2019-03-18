@@ -18,6 +18,7 @@ import blogIcon from '../../assets/images/index/blog.png'
 import resumeIcon from '../../assets/images/index/resume.png'
 import colorIcon from '../../assets/images/index/color.png'
 import filterIcon from '../../assets/images/index/filter.png'
+import colorPicker from '../../assets/images/index/picker.png'
 import notFoundIcon from '../../assets/images/index/404.png'
 
 const toolDataList = [{
@@ -41,8 +42,9 @@ const toolDataList = [{
   pageUrl: '/pages/filter/index',
   value: '滤镜'
 }, {
-  image: notFoundIcon,
-  value: '待开放'
+  image: colorPicker,
+  pageUrl: '/pages/color-show/index',
+  value: '颜色选择器'
 }, {
   image: notFoundIcon,
   value: '待开放'
@@ -124,7 +126,7 @@ class Index extends Component {
   render () {
     // const { counterStore: { counter } } = this.props
     return (
-      <View className="index">
+      <View className="index-page">
         <View className="index-header">
           <AtAvatar openData={{ type: 'userAvatarUrl' }} circle />
         </View>

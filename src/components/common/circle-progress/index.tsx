@@ -1,3 +1,4 @@
+import { ComponentType } from 'react'
 import Taro, { Component } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 
@@ -64,4 +65,4 @@ class CircleProgress extends Component {
   }
 }
 
-export default CircleProgress
+export default CircleProgress as ComponentType

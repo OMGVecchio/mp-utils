@@ -117,7 +117,7 @@ class Color extends Component {
       )
     })
     return (
-      <View className="color">
+      <View className="color-page">
         <View className="color-select-wrap">
           <View className="color-cmyk-wrap">
             {cmykItemList}

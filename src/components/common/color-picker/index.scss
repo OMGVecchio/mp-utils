@@ -1,0 +1,60 @@
+@import '../../../assets/styles/common.scss';
+
+.color-picker {
+  @include flex(column, space-between);
+
+  .color-panel {
+    @include flex(row, space-between);
+    width: 450px;
+    height: 200px;;
+
+    .color-sb-panel {
+      position: relative;
+      width: 400px;
+      height: 100%;
+
+      .color-saturation-panel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: linear-gradient(90deg, #FFFFFF, hsla(0, 0%, 100%, 0));
+      }
+
+      .color-brightness-panel {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: linear-gradient(0deg, #000, transparent);
+      }
+
+      .color-sb-cursor {
+        position: absolute;
+        border-radius: 0;
+        height: 4px;
+        width: 4px;
+        border: 2px solid #FFFFFF;
+        background-color: transparent;
+      }
+    }
+    .color-hue-slider {
+      position: relative;
+      width: 20px;
+      height: 100%;
+      background-image: linear-gradient(to bottom,red 0,#ff0 17%,#0f0 33%,#0ff 50%,#00f 67%,#f0f 83%,red 100%);
+
+      .color-hue-slider-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 10px;
+        background-color: #FFFFFF;
+        border-radius: 5px;
+      }
+    }
+  }
+}

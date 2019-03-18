@@ -62,7 +62,7 @@ class Blog extends Component {
       )
     })
     return (
-      <View className="blog">
+      <View className="blog-page">
         {cardListHtml}
       </View>
     )
