@@ -18,7 +18,8 @@ import blogIcon from '../../assets/images/index/blog.png'
 import resumeIcon from '../../assets/images/index/resume.png'
 import colorIcon from '../../assets/images/index/color.png'
 import filterIcon from '../../assets/images/index/filter.png'
-import colorPicker from '../../assets/images/index/picker.png'
+import colorPickerIcon from '../../assets/images/index/picker.png'
+import conversationIcon from '../../assets/images/index/conversation.png'
 import notFoundIcon from '../../assets/images/index/404.png'
 
 const toolDataList = [{
@@ -42,12 +43,13 @@ const toolDataList = [{
   pageUrl: '/pages/filter/index',
   value: '滤镜'
 }, {
-  image: colorPicker,
+  image: colorPickerIcon,
   pageUrl: '/pages/color-show/index',
   value: '颜色选择器'
 }, {
-  image: notFoundIcon,
-  value: '待开放'
+  image: conversationIcon,
+  pageUrl: '/pages/conversation/index',
+  value: '即时通讯'
 }, {
   image: notFoundIcon,
   value: '待开放'

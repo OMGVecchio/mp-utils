@@ -29,7 +29,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 4,
+			"current": 5,
 			"list": [
 				{
 					"id": 0,
@@ -63,6 +63,14 @@
 					"id": -1,
 					"name": "颜色选择器",
 					"pathName": "pages/color-show/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 5,
+					"name": "及时通讯",
+					"pathName": "pages/conversation/index",
+					"query": "",
 					"scene": null
 				}
 			]
