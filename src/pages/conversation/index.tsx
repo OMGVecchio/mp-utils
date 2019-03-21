@@ -5,9 +5,11 @@ import {
   Camera,
   Button,
   Image,
-  Video,
-  LivePlayer
+  Video
 } from '@tarojs/components'
+import { AtList, AtListItem } from "taro-ui"
+
+import socket from '../../utils/socket'
 
 import './index.scss'
 
@@ -17,7 +19,8 @@ type PageStateProps = {
 type StateType = {
   photoPath: string,
   recordPath: string,
-  isRecording: boolean
+  isRecording: boolean,
+  friends: string[]
 }
 
 interface Conversation {
@@ -33,40 +36,68 @@ class Conversation extends Component {
   state: StateType = {
     photoPath: '',
     recordPath: '',
-    isRecording: false
+    isRecording: false,
+    friends: []
   }
 
-  takePhoto = () => {
-    const cameraCtx = Taro.createCameraContext()
-    cameraCtx.takePhoto({
-      success: (r) => {
-        this.setState({ photoPath: r.tempImagePath })
-      }
+  socket: any = null
+
+  componentDidMount () {
+    socket.emit('newMember')
+    socket.on('refreshFriendList', friends => {
+      console.log('refreshFriendList')
+      this.setState({ friends })
     })
   }
 
-  record = () => {
-    const cameraCtx = Taro.createCameraContext()
-    const { isRecording } = this.state
-    if (isRecording) {
-      cameraCtx.stopRecord({
-        success: (r) => {
-          this.setState({
-            recordPath: r.tempVideoPath
-          }, () => {
-            Taro.createVideoContext('record').play()
-          })
-        }
-      })
-    } else {
-      cameraCtx.startRecord({})
-    }
-    this.setState({ isRecording: !isRecording })
+  chatSingle = (friendId) => {
+    Taro.navigateTo({ url: `/pages/conversation/single/index?id=${friendId}` })
   }
 
+  // takePhoto = () => {
+  //   const cameraCtx = Taro.createCameraContext()
+  //   cameraCtx.takePhoto({
+  //     success: (r) => {
+  //       this.setState({ photoPath: r.tempImagePath })
+  //     }
+  //   })
+  // }
+
+  // record = () => {
+  //   const cameraCtx = Taro.createCameraContext()
+  //   const { isRecording } = this.state
+  //   if (isRecording) {
+  //     cameraCtx.stopRecord({
+  //       success: (r) => {
+  //         this.setState({
+  //           recordPath: r.tempVideoPath
+  //         }, () => {
+  //           Taro.createVideoContext('record').play()
+  //         })
+  //       }
+  //     })
+  //   } else {
+  //     cameraCtx.startRecord({})
+  //   }
+  //   this.setState({ isRecording: !isRecording })
+  // }
+
   render () {
+    const { friends } = this.state
+    const friendsHTML = friends.filter(friend => friend !== socket.id).map(friend => {
+      return (
+        <AtListItem
+          title={friend}
+          key={friend}
+          onClick={() => this.chatSingle(friend) }
+        />
+      )
+    })
     return (
       <View className="conversation-page">
+        <AtList>
+          {friendsHTML}
+        </AtList>
         {/* <Camera
           className="common-style"
           device-position="front"

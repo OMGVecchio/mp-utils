@@ -25,7 +25,7 @@ type StateType = {
 }
 
 interface ColorPicker {
-  props: PageStateProps;
+  props: PageStateProps
 }
 
 class ColorPicker extends Component {

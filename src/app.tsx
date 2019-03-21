@@ -40,7 +40,9 @@ class App extends Component {
       'pages/color/index',
       'pages/filter/index',
       'pages/color-show/index',
-      'pages/conversation/index'
+      'pages/conversation/index',
+      'pages/conversation/single/index',
+      'pages/conversation/room/index'
     ],
     window: {
       backgroundTextStyle: 'light',

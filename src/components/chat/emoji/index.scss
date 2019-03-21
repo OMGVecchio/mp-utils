@@ -1,0 +1,14 @@
+@import '../../../assets/styles/common.scss';
+
+.emoji-panel {
+  @include flex(row, space-between);
+  flex-wrap: wrap;
+  height: 300px;
+  width: 100%;
+  background-color: #FFFFFF;
+
+  .emoji-item {
+    display: inline-block;
+    margin: 10px 20px;
+  }
+}
