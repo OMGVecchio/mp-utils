@@ -13,6 +13,11 @@ $arrow-size: 12px;
     margin-right: 20px;
   }
 
+  .chat-dialog-picture {
+    border-radius: 10px;
+    max-width: 300px;
+  }
+
   .chat-dialog-text {
     position: relative;
     background-color: $other-color;

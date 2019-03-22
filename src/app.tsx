@@ -41,7 +41,6 @@ class App extends Component {
       'pages/filter/index',
       'pages/color-show/index',
       'pages/conversation/index',
-      'pages/conversation/single/index',
       'pages/conversation/room/index'
     ],
     window: {

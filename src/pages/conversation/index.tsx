@@ -50,8 +50,12 @@ class Conversation extends Component {
     })
   }
 
+  componentWillUnmount () {
+    socket.off('refreshFriendList')
+  }
+
   chatSingle = (friendId) => {
-    Taro.navigateTo({ url: `/pages/conversation/single/index?id=${friendId}` })
+    Taro.navigateTo({ url: `/pages/conversation/room/index?id=${friendId}` })
   }
 
   // takePhoto = () => {

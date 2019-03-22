@@ -1,6 +1,6 @@
 import io from 'weapp.socket.io'
 
-const socket =  io('ws://192.168.31.18:3000')
+const socket =  io('ws://127.0.0.1:3000')
 
 socket.on('connect', () => {
   console.log('连接成功')

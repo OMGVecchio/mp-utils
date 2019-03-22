@@ -76,7 +76,7 @@
 				{
 					"id": 6,
 					"name": "单独聊天室",
-					"pathName": "pages/conversation/single/index",
+					"pathName": "pages/conversation/room/index",
 					"query": "",
 					"scene": null
 				}

@@ -12,17 +12,11 @@ type PageStateProps = {
   select: Function
 }
 
-type StateType = {
-}
-
 interface ChatSingle {
   props: PageStateProps;
 }
 
 class ChatSingle extends Component {
-
-  state: StateType = {
-  }
 
   render () {
     const { select = () => {} } = this.props

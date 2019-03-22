@@ -1,6 +1,6 @@
 import { ComponentType } from 'react'
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
+import { View, Text, Image } from '@tarojs/components'
 import { AtAvatar } from 'taro-ui'
 import classnames from 'classnames'
 
@@ -8,8 +8,9 @@ import './index.scss'
 
 type PageStateProps = {
   own: boolean,
-  msg: string,
-  title: string
+  data: string,
+  title: string,
+  isMedia: boolean
 }
 
 interface ChatDialog {
@@ -21,19 +22,31 @@ class ChatDialog extends Component {
   render () {
     const {
       own,
-      msg,
-      title
+      data,
+      title,
+      isMedia
     } = this.props
     return (
       <View className={classnames('chat-dialog', own && 'reverse')}>
         <View className="chat-dialog-avatar">
           <AtAvatar size="small" text={title} />
         </View>
-        <View className="chat-dialog-text">
-          <Text>
-            {msg}
-          </Text>
-        </View>
+        {
+          isMedia ? (
+            <Image
+              src={data}
+              className="chat-dialog-picture"
+              mode="widthFix"
+              onClick={() => Taro.previewImage({ urls: [data] }) }
+            />
+          ) : (
+            <View className="chat-dialog-text">
+              <Text>
+                {data}
+              </Text>
+            </View>
+          )
+        }
       </View>
     )
   }
