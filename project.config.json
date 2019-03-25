@@ -75,9 +75,9 @@
 				},
 				{
 					"id": 6,
-					"name": "单独聊天室",
+					"name": "聊天室",
 					"pathName": "pages/conversation/room/index",
-					"query": "",
+					"query": "id=13123123",
 					"scene": null
 				}
 			]

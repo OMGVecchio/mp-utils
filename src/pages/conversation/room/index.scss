@@ -1,6 +1,6 @@
 @import '../../../assets/styles/common.scss';
 
-.conversation-single-page {
+.conversation-page {
   @include flex(column, space-between);
   position: relative;
   height: 100vh;
@@ -27,15 +27,28 @@
     background-color: $wechat-gray;
     z-index: 1;
 
+    .conversation-type {
+      padding: 0 10px;
+    }
+
     .conversation-input {
       background-color: #FFFFFF;
       border-radius: 10px;
-      margin: 0 20px;
-      padding: 0 20px;
-      height: 80px;
+      margin: 0 20px 0 0;
       flex-grow: 1;
+      height: 80px;
       line-height: 80px;
       font-size: 30px;
+
+      .conversation-input-msg {
+        padding: 0 20px;
+        height: 100%;
+        text-align: left;
+      }
+
+      .conversation-input-record {
+        text-align: center;
+      }
     }
 
     .conversation-option {

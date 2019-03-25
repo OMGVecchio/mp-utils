@@ -6,8 +6,13 @@ import { AtIcon } from 'taro-ui'
 import ChatDialog from '../../../components/chat/dialog'
 import EmojiPanel from '../../../components/chat/emoji'
 
-import socket from '../../../utils/socket'
 import bgImg from '../../../assets/images/chat/bg.jpg'
+import socket from '../../../utils/socket'
+import {
+  MSG_TEXT,
+  MSG_PICT,
+  MSG_AUDI
+} from '../../../utils/const'
 
 import './index.scss'
 
@@ -17,10 +22,12 @@ type PageStateProps = {
 type StateType = {
   msg: string,
   showIcon: boolean,
+  msgIsCommon: boolean,
+  isRecordIng: boolean,
   history: {
     title: string,
     data: string,
-    isMedia: boolean,
+    mediaType: number,
     own: boolean,
     timestamp: number
   }[]
@@ -39,22 +46,26 @@ class ChatSingle extends Component {
   state: StateType = {
     msg: '',
     showIcon: false,
+    msgIsCommon: true,
+    isRecordIng: false,
     history: []
   }
+
+  recordStartTimestamp: null | number = null
 
   componentDidMount () {
     Taro.setNavigationBarTitle({ title: this.$router.params.id })
     socket.on('single-message', res => {
       const {
         data,
-        isMedia,
+        mediaType,
         from
       } = res
       this.setState({
         history: this.state.history.concat({
           title: from,
           data,
-          isMedia,
+          mediaType,
           own: false,
           timestamp: Date.now()
         })
@@ -77,7 +88,8 @@ class ChatSingle extends Component {
     const own = true
     const param = {
       msg,
-      to
+      to,
+      mediaType: MSG_TEXT
     }
     socket.emit('single-message', param)
     this.setState({
@@ -85,10 +97,36 @@ class ChatSingle extends Component {
       history: this.state.history.concat({
         title: to,
         data: msg,
-        isMedia: false,
+        mediaType: MSG_TEXT,
         own,
         timestamp: Date.now()
       })
+    })
+  }
+
+  uploadData = (filePath, mediaType) => {
+    Taro.uploadFile({
+      url: 'http://127.0.0.1:3000/api/socket/msg/media',
+      name: 'media',
+      formData: {
+        to: this.$router.params.id,
+        from: socket.id,
+        mediaType
+      },
+      filePath: filePath,
+      success: ({ data }) => {
+        const dataJson = JSON.parse(data)
+        const { data: imgUrl } = dataJson
+        this.setState({
+          history: this.state.history.concat({
+            title: this.$router.params.id,
+            data: imgUrl,
+            mediaType,
+            own: true,
+            timestamp: Date.now()
+          })
+        })
+      }
     })
   }
 
@@ -96,32 +134,31 @@ class ChatSingle extends Component {
     // TODO: chooseImage param type error
     Taro.chooseImage({
       count: 9,
-      success: r => {
-        const { tempFilePaths } = r
-        Taro.uploadFile({
-          url: 'http://127.0.0.1:3000/api/socket/msg/media',
-          name: 'media',
-          formData: {
-            to: this.$router.params.id,
-            from: socket.id
-          },
-          filePath: tempFilePaths[0],
-          success: ({ data }) => {
-            const dataJson = JSON.parse(data)
-            const { data: imgUrl } = dataJson
-            this.setState({
-              history: this.state.history.concat({
-                title: this.$router.params.id,
-                data: imgUrl,
-                isMedia: true,
-                own: true,
-                timestamp: Date.now()
-              })
-            })
-          }
-        })
+      success: ({ tempFilePaths }) => {
+        this.uploadData(tempFilePaths[0], MSG_PICT)
       }
     } as any)
+  }
+
+  recordStart = () => {
+    Taro.getRecorderManager().start({})
+    this.recordStartTimestamp = Date.now()
+    this.setState({ isRecordIng: true })
+  }
+
+  recordStop = () => {
+    this.setState({ isRecordIng: false })
+    if (this.recordStartTimestamp) {
+      const duration = Date.now() - this.recordStartTimestamp
+      this.recordStartTimestamp = 0
+      if (duration < 500) {
+        return
+      }
+      Taro.getRecorderManager().onStop(({ tempFilePath }) => {
+        this.uploadData(tempFilePath, MSG_AUDI)
+      })
+      Taro.getRecorderManager().stop()
+    }
   }
 
   selectEmoji = emoji => {
@@ -129,12 +166,12 @@ class ChatSingle extends Component {
   }
 
   render () {
-    const { showIcon } = this.state
+    const { showIcon, msg, msgIsCommon, isRecordIng } = this.state
     const chatDialogHTML = this.state.history.map(dialogItem => {
       const {
         title,
         data,
-        isMedia,
+        mediaType,
         own,
         timestamp
       } = dialogItem
@@ -144,12 +181,12 @@ class ChatSingle extends Component {
           title={title}
           own={own}
           data={String(data)}
-          isMedia={isMedia}
+          mediaType={mediaType}
         />
       )
     })
     return (
-      <View className="conversation-single-page">
+      <View className="conversation-page">
         <Image src={bgImg} className="conversation-bg" />
         <ScrollView
           scrollY
@@ -159,15 +196,28 @@ class ChatSingle extends Component {
           {chatDialogHTML}
         </ScrollView>
         <View className="conversation-option-panel">
-          <Input
-            className="conversation-input"
-            onInput={this.changeMsg}
-            value={this.state.msg}
-          />
+          <View className="conversation-type" onClick={() => this.setState({ msgIsCommon: !msgIsCommon })}>
+            <AtIcon value={msgIsCommon ? 'message' : 'phone'} />
+          </View>
+          <View className="conversation-input">
+            {
+              msgIsCommon ? (
+                <Input className="conversation-input-msg" onInput={this.changeMsg} value={msg} />
+              ) : (
+                <View
+                  className="conversation-input-record"
+                  onTouchStart={this.recordStart}
+                  onTouchEnd={this.recordStop}
+                >
+                  {isRecordIng ? '松开 结束' : '按住 说话'}
+                </View>
+              )
+            }
+          </View>
           <View className="conversation-option">
             <AtIcon value="image" onClick={() => this.setState({ showIcon: true })}/>
             {
-              this.state.msg ? (
+              msg ? (
                 <Button onClick={this.sendMsg} className="conversation-option-send">
                   发送
                 </Button>
