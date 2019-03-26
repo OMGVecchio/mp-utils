@@ -1,6 +1,8 @@
 import Taro from '@tarojs/taro'
 import { observable } from 'mobx'
 
+import { SERVER_HTTP } from '../utils/config'
+
 const blogStore = observable({
   articleList: [],
   isFetchingList: false,
@@ -12,7 +14,7 @@ const blogStore = observable({
     }
     this.isFetchingList = true
     Taro.request({
-      url: 'https://vecchio.top/api/article',
+      url: `${SERVER_HTTP}/api/article`,
       dataType: 'JSON',
       complete: () => {
         this.isFetchingList = false
@@ -29,7 +31,7 @@ const blogStore = observable({
     }
     this.isFetchingDetail = true
     Taro.request({
-      url: `https://vecchio.top/api/article/${articleId}`,
+      url: `${SERVER_HTTP}/api/article/${articleId}`,
       dataType: 'JSON',
       complete: () => {
         this.isFetchingList = false

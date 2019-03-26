@@ -18,7 +18,7 @@ type PageStateProps = {
 }
 
 interface Blog {
-  props: PageStateProps;
+  props: PageStateProps
 }
 
 @inject('blogStore')

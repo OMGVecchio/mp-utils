@@ -1,6 +1,7 @@
 import io from 'weapp.socket.io'
+import { SERVER_SOCKET } from './config'
 
-const socket =  io('ws://127.0.0.1:3000')
+const socket = io(SERVER_SOCKET)
 
 socket.on('connect', () => {
   console.log('连接成功')

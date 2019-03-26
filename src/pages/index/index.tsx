@@ -1,15 +1,13 @@
 import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import {
-  View,
-  Button,
-  Text
-} from '@tarojs/components'
-// import { observer, inject } from '@tarojs/mobx'
+import { View, Button } from '@tarojs/components'
+import { observer, inject } from '@tarojs/mobx'
 import {
   AtGrid,
   AtAvatar
 } from 'taro-ui'
+
+import { SESSION_KEY, USER_INFO } from '../../utils/const'
 
 import './index.scss'
 
@@ -59,12 +57,13 @@ const toolDataList = [{
 }]
 
 type PageStateProps = {
-  // counterStore: {
-  //   counter: number,
-  //   increment: Function,
-  //   decrement: Function,
-  //   incrementAsync: Function
-  // }
+  sessionStore: {
+    setAuth: Function,
+    setUserInfo: Function
+  }
+}
+type StateType = {
+  hasLogin: boolean
 }
 type toolItemType = {
   image: string,
@@ -76,8 +75,8 @@ interface Index {
   props: PageStateProps;
 }
 
-// @inject('counterStore')
-// @observer
+@inject('sessionStore')
+@observer
 class Index extends Component {
 
   /**
@@ -91,32 +90,30 @@ class Index extends Component {
     navigationBarTitleText: '首页'
   }
 
+  state: StateType = {
+    hasLogin: false
+  }
+
   componentWillMount () { }
 
   componentWillReact () { }
 
-  componentDidMount () { }
+  componentDidMount () {
+    const { sessionStore } = this.props
+    if (!Taro.getStorageSync(SESSION_KEY)) {
+      Taro.login({ success: ({ code }) => sessionStore.setAuth({ code }) })
+    }
+    const userInfo = Taro.getStorageSync(USER_INFO)
+    if (userInfo) {
+      this.setState({ hasLogin: true })
+    }
+  }
 
   componentWillUnmount () { }
 
   componentDidShow () { }
 
   componentDidHide () { }
-
-  // increment = () => {
-  //   const { counterStore } = this.props
-  //   counterStore.increment()
-  // }
-
-  // decrement = () => {
-  //   const { counterStore } = this.props
-  //   counterStore.decrement()
-  // }
-
-  // incrementAsync = () => {
-  //   const { counterStore } = this.props
-  //   counterStore.incrementAsync()
-  // }
 
   gotoSubPage = (item: toolItemType) => {
     const { pageUrl } = item
@@ -125,18 +122,31 @@ class Index extends Component {
     }
   }
 
+  getUserInfo = userInfo => {
+    const { sessionStore } = this.props
+    sessionStore.setUserInfo(userInfo.detail.userInfo)
+    this.setState({ hasLogin: true })
+  }
+
   render () {
-    // const { counterStore: { counter } } = this.props
     return (
       <View className="index-page">
         <View className="index-header">
           <AtAvatar openData={{ type: 'userAvatarUrl' }} circle />
+          {
+            !this.state.hasLogin && (
+              <Button
+                className="authorization-btn"
+                size="mini"
+                openType="getUserInfo"
+                onGetUserInfo={this.getUserInfo}
+              >
+                点击授权
+              </Button>
+            )
+          }
         </View>
         <AtGrid data={toolDataList} onClick={this.gotoSubPage} />
-        {/* <Button onClick={this.increment}>+</Button>
-        <Button onClick={this.decrement}>-</Button>
-        <Button onClick={this.incrementAsync}>Add Async</Button>
-        <Text>{counter}</Text> */}
       </View>
     )
   }

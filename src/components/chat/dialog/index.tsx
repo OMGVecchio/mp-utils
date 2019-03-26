@@ -16,10 +16,12 @@ type PageStateProps = {
   own: boolean,
   data: string,
   title: string,
-  mediaType: number
+  mediaType: number,
+  timestamp: number
 }
 
 type StateType = {
+  voiceIsStart: boolean,
   voiceDuration: number
 }
 
@@ -29,17 +31,42 @@ interface ChatDialog {
 
 class ChatDialog extends Component {
 
-  playVoice = voiceUrl => {
-    const ac = Taro.createInnerAudioContext()
-    ac.src = voiceUrl
-    ac.play()
-    ac.onCanplay(() => {
-      this.setState({ voiceDuration: ac.duration })
-    })
+  state: StateType = {
+    voiceIsStart: false,
+    voiceDuration: 0
   }
 
-  state: StateType = {
-    voiceDuration: 0
+  audioCtx: null | Taro.InnerAudioContext = null
+
+  playVoice = voiceUrl => {
+    const { audioCtx } = this
+    if (audioCtx) {
+      if (this.state.voiceIsStart) {
+        this.stopVoice()
+        return
+      }
+      audioCtx.src = voiceUrl
+      audioCtx.play()
+      audioCtx.onCanplay(() => {
+        this.setState({
+          voiceDuration: audioCtx.duration
+        })
+      })
+    }
+  }
+
+  stopVoice = () => {
+    const { audioCtx } = this
+    if (audioCtx) {
+      audioCtx.stop()
+      this.setState({ voiceIsStart: false })
+    }
+  }
+
+  componentDidMount () {
+    if (this.props.mediaType === MSG_AUDI) {
+      this.audioCtx = Taro.createInnerAudioContext()
+    }
   }
 
   render () {
@@ -47,7 +74,8 @@ class ChatDialog extends Component {
       own,
       data,
       title,
-      mediaType
+      mediaType,
+      timestamp
     } = this.props
     let dialogHTML
     switch (Number(mediaType)) {
@@ -72,19 +100,29 @@ class ChatDialog extends Component {
       }
       default: {
         dialogHTML = (
-          <View className="chat-dialog-audi" onClick={() => this.playVoice(data)}>
-              {this.state.voiceDuration}''<AtIcon value="volume-plus" />
+          <View
+            className="chat-dialog-text chat-dialog-audi"
+            onClick={() => this.playVoice(data)}
+          >
+            {this.state.voiceDuration}''<AtIcon value="volume-plus" />
           </View>
         )
         break
       }
     }
     return (
-      <View className={classnames('chat-dialog', own && 'reverse')}>
-        <View className="chat-dialog-avatar">
-          <AtAvatar size="small" text={title} />
+      <View className="chat-dialog-wrap">
+        <View className="chat-dialog-timestamp-wrap">
+          <View className="chat-dialog-timestamp">
+            {timestamp}
+          </View>
         </View>
-        {dialogHTML}
+        <View className={classnames('chat-dialog', own && 'reverse')}>
+          <View className="chat-dialog-avatar">
+            <AtAvatar size="small" text={title} />
+          </View>
+          {dialogHTML}
+        </View>
       </View>
     )
   }

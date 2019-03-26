@@ -1,6 +1,6 @@
 import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { ScrollView, View, Image, Input, Button } from '@tarojs/components'
+import { ScrollView, View, Image, Textarea, Button } from '@tarojs/components'
 import { AtIcon } from 'taro-ui'
 
 import ChatDialog from '../../../components/chat/dialog'
@@ -8,6 +8,7 @@ import EmojiPanel from '../../../components/chat/emoji'
 
 import bgImg from '../../../assets/images/chat/bg.jpg'
 import socket from '../../../utils/socket'
+import { SERVER_HTTP } from '../../../utils/config'
 import {
   MSG_TEXT,
   MSG_PICT,
@@ -24,6 +25,7 @@ type StateType = {
   showIcon: boolean,
   msgIsCommon: boolean,
   isRecordIng: boolean,
+  currentDialogId: string,
   history: {
     title: string,
     data: string,
@@ -48,6 +50,7 @@ class ChatSingle extends Component {
     showIcon: false,
     msgIsCommon: true,
     isRecordIng: false,
+    currentDialogId: '',
     history: []
   }
 
@@ -58,16 +61,18 @@ class ChatSingle extends Component {
     socket.on('single-message', res => {
       const {
         data,
-        mediaType,
-        from
+        mediaType = 1,
+        from,
+        timestamp = Date.now()
       } = res
       this.setState({
+        currentDialogId: this.getDialogIdTag(timestamp),
         history: this.state.history.concat({
           title: from,
           data,
           mediaType,
           own: false,
-          timestamp: Date.now()
+          timestamp
         })
       })
     })
@@ -76,6 +81,8 @@ class ChatSingle extends Component {
   componentWillUnmount () {
     socket.off('single-message')
   }
+
+  getDialogIdTag = timestamp => `id${timestamp}`
 
   changeMsg = e => {
     const { value: msg } = e.target
@@ -86,27 +93,30 @@ class ChatSingle extends Component {
     const { msg } = this.state
     const to = this.$router.params.id
     const own = true
+    const timestamp = Date.now()
     const param = {
       msg,
       to,
+      timestamp,
       mediaType: MSG_TEXT
     }
     socket.emit('single-message', param)
     this.setState({
       msg: '',
+      currentDialogId: this.getDialogIdTag(timestamp),
       history: this.state.history.concat({
         title: to,
         data: msg,
         mediaType: MSG_TEXT,
         own,
-        timestamp: Date.now()
+        timestamp
       })
     })
   }
 
   uploadData = (filePath, mediaType) => {
     Taro.uploadFile({
-      url: 'http://127.0.0.1:3000/api/socket/msg/media',
+      url: `${SERVER_HTTP}/api/socket/msg/media`,
       name: 'media',
       formData: {
         to: this.$router.params.id,
@@ -117,13 +127,15 @@ class ChatSingle extends Component {
       success: ({ data }) => {
         const dataJson = JSON.parse(data)
         const { data: imgUrl } = dataJson
+        const timestamp = Date.now()
         this.setState({
+          currentDialogId: this.getDialogIdTag(timestamp),
           history: this.state.history.concat({
             title: this.$router.params.id,
             data: imgUrl,
             mediaType,
             own: true,
-            timestamp: Date.now()
+            timestamp
           })
         })
       }
@@ -177,11 +189,13 @@ class ChatSingle extends Component {
       } = dialogItem
       return (
         <ChatDialog
+          id={this.getDialogIdTag(timestamp)}
           key={timestamp}
           title={title}
           own={own}
           data={String(data)}
           mediaType={mediaType}
+          timestamp={timestamp}
         />
       )
     })
@@ -190,6 +204,8 @@ class ChatSingle extends Component {
         <Image src={bgImg} className="conversation-bg" />
         <ScrollView
           scrollY
+          scrollIntoView={this.state.currentDialogId}
+          scrollWithAnimation={true}
           className="conversation-dialog-panel"
           onClick={ () => showIcon && this.setState({ showIcon: false }) }
         >
@@ -202,7 +218,13 @@ class ChatSingle extends Component {
           <View className="conversation-input">
             {
               msgIsCommon ? (
-                <Input className="conversation-input-msg" onInput={this.changeMsg} value={msg} />
+                <Textarea
+                  className="conversation-input-msg"
+                  onInput={this.changeMsg}
+                  value={msg}
+                  autoHeight={true}
+                  maxlength={-1}
+                />
               ) : (
                 <View
                   className="conversation-input-record"
@@ -215,10 +237,17 @@ class ChatSingle extends Component {
             }
           </View>
           <View className="conversation-option">
-            <AtIcon value="image" onClick={() => this.setState({ showIcon: true })}/>
+            <AtIcon
+              value="image"
+              className="conversation-option-emoji conversation-option-item"
+              onClick={() => this.setState({ showIcon: true })}
+            />
             {
               msg ? (
-                <Button onClick={this.sendMsg} className="conversation-option-send">
+                <Button
+                  className="conversation-option-send conversation-option-item"
+                  onClick={this.sendMsg}
+                >
                   发送
                 </Button>
               ) : (

@@ -1,5 +1,10 @@
 @import '../../../assets/styles/common.scss';
 
+$option-height: 100px;
+$option-padding: 15px;
+$input-line: 40px;
+$input-pdding: 20px;
+
 .conversation-page {
   @include flex(column, space-between);
   position: relative;
@@ -16,34 +21,43 @@
     flex-grow: 1;
     overflow-y: scroll;
     width: 100%;
+    height: 100%;
     z-index: 1;
   }
 
   .conversation-option-panel {
-    @include flex(row, space-between);
+    @include flex(row, space-between, flex-start);
     flex-shrink: 0;
-    height: 100px;
+    min-height: $option-height;
     width: 100%;
     background-color: $wechat-gray;
     z-index: 1;
 
     .conversation-type {
-      padding: 0 10px;
+      @include flex();
+      padding: 0 $option-padding;
+      height: $option-height;
     }
 
     .conversation-input {
       background-color: #FFFFFF;
       border-radius: 10px;
-      margin: 0 20px 0 0;
+      margin: $option-padding;
+      margin-left: 0;
+      padding: $input-pdding;
       flex-grow: 1;
-      height: 80px;
-      line-height: 80px;
+      min-height: $option-height - $option-padding * 2 - $input-pdding * 2;
+      line-height: $option-height - $option-padding * 2;
       font-size: 30px;
 
       .conversation-input-msg {
-        padding: 0 20px;
-        height: 100%;
+        min-height: $input-line;
+        line-height: $input-line;
+        max-height: 5 * $input-line;
         text-align: left;
+        overflow: hidden;
+        width: 100%;
+        letter-spacing: 30px !important;
       }
 
       .conversation-input-record {
@@ -53,15 +67,24 @@
 
     .conversation-option {
       @include flex(row, space-around);
-      flex-shrink: 0;
+      height: $option-height;
       width: 140px;
+
+      .conversation-option-emoji {
+        margin-top: -5px;
+      }
 
       .conversation-option-send {
         font-size: 30px;
-        padding: 10px;
-        line-height: 1.2;
+        line-height: 2;
+        padding-left: 10px;
+        padding-right: 10px;
         background-color: $wechat-green;
         color: #FFFFFF;
+      }
+
+      .conversation-option-item {
+        flex-shrink: 0;
       }
     }
   }
