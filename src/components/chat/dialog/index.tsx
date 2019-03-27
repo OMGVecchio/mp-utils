@@ -9,6 +9,7 @@ import {
   MSG_PICT,
   MSG_AUDI
 } from '../../../utils/const'
+import { format } from './time'
 
 import './index.scss'
 
@@ -77,6 +78,7 @@ class ChatDialog extends Component {
       mediaType,
       timestamp
     } = this.props
+
     let dialogHTML
     switch (Number(mediaType)) {
       case MSG_TEXT: {
@@ -110,13 +112,22 @@ class ChatDialog extends Component {
         break
       }
     }
-    return (
-      <View className="chat-dialog-wrap">
+
+    let dialogTimestamp
+    if (timestamp) {
+      const timeFormat = format(timestamp)
+      dialogTimestamp = (
         <View className="chat-dialog-timestamp-wrap">
           <View className="chat-dialog-timestamp">
-            {timestamp}
+            {timeFormat}
           </View>
         </View>
+      )
+    }
+
+    return (
+      <View className="chat-dialog-wrap">
+       {dialogTimestamp}
         <View className={classnames('chat-dialog', own && 'reverse')}>
           <View className="chat-dialog-avatar">
             <AtAvatar size="small" text={title} />

@@ -138,6 +138,9 @@ class ChatSingle extends Component {
             timestamp
           })
         })
+        if (mediaType === MSG_TEXT) {
+          this.setState({ msg: '' })
+        }
       }
     })
   }
@@ -213,16 +216,18 @@ class ChatSingle extends Component {
         </ScrollView>
         <View className="conversation-option-panel">
           <View className="conversation-type" onClick={() => this.setState({ msgIsCommon: !msgIsCommon })}>
-            <AtIcon value={msgIsCommon ? 'message' : 'phone'} />
+            <AtIcon className="conversation-icon" value={msgIsCommon ? 'message' : 'phone'} />
           </View>
           <View className="conversation-input">
             {
               msgIsCommon ? (
                 <Textarea
+                  cursor-spacing={'35rpx'}
                   className="conversation-input-msg"
                   onInput={this.changeMsg}
                   value={msg}
                   autoHeight={true}
+                  showConfirmBar={false}
                   maxlength={-1}
                 />
               ) : (
@@ -239,7 +244,7 @@ class ChatSingle extends Component {
           <View className="conversation-option">
             <AtIcon
               value="image"
-              className="conversation-option-emoji conversation-option-item"
+              className="conversation-icon conversation-option-item"
               onClick={() => this.setState({ showIcon: true })}
             />
             {
@@ -251,7 +256,11 @@ class ChatSingle extends Component {
                   发送
                 </Button>
               ) : (
-                <AtIcon value="add-circle" onClick={this.sendFile} />
+                <AtIcon
+                  className="conversation-icon"
+                  value="add-circle"
+                  onClick={this.sendFile}
+                />
               )
             }
           </View>

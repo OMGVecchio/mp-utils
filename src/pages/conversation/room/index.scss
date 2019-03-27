@@ -4,6 +4,7 @@ $option-height: 100px;
 $option-padding: 15px;
 $input-line: 40px;
 $input-pdding: 20px;
+$icon-margin: -5px;
 
 .conversation-page {
   @include flex(column, space-between);
@@ -26,7 +27,7 @@ $input-pdding: 20px;
   }
 
   .conversation-option-panel {
-    @include flex(row, space-between, flex-start);
+    @include flex(row, space-between, flex-end);
     flex-shrink: 0;
     min-height: $option-height;
     width: 100%;
@@ -57,7 +58,6 @@ $input-pdding: 20px;
         text-align: left;
         overflow: hidden;
         width: 100%;
-        letter-spacing: 30px !important;
       }
 
       .conversation-input-record {
@@ -69,10 +69,6 @@ $input-pdding: 20px;
       @include flex(row, space-around);
       height: $option-height;
       width: 140px;
-
-      .conversation-option-emoji {
-        margin-top: -5px;
-      }
 
       .conversation-option-send {
         font-size: 30px;
@@ -86,6 +82,10 @@ $input-pdding: 20px;
       .conversation-option-item {
         flex-shrink: 0;
       }
+    }
+
+    .conversation-icon {
+      margin-top: $icon-margin;
     }
   }
 }
