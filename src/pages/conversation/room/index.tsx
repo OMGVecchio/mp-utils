@@ -181,8 +181,14 @@ class ChatSingle extends Component {
   }
 
   render () {
-    const { showIcon, msg, msgIsCommon, isRecordIng } = this.state
-    const chatDialogHTML = this.state.history.map(dialogItem => {
+    const {
+      history,
+      showIcon,
+      msg,
+      msgIsCommon,
+      isRecordIng
+    } = this.state
+    const chatDialogHTML = history.map((dialogItem, index) => {
       const {
         title,
         data,
@@ -190,6 +196,7 @@ class ChatSingle extends Component {
         own,
         timestamp
       } = dialogItem
+      const showTime = index === 0 || (timestamp - history[index - 1].timestamp > 1000 * 60 * 5)
       return (
         <ChatDialog
           id={this.getDialogIdTag(timestamp)}
@@ -199,6 +206,7 @@ class ChatSingle extends Component {
           data={String(data)}
           mediaType={mediaType}
           timestamp={timestamp}
+          showTime={showTime}
         />
       )
     })

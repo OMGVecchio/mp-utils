@@ -18,7 +18,8 @@ type PageStateProps = {
   data: string,
   title: string,
   mediaType: number,
-  timestamp: number
+  timestamp: number,
+  showTime: boolean
 }
 
 type StateType = {
@@ -49,9 +50,7 @@ class ChatDialog extends Component {
       audioCtx.src = voiceUrl
       audioCtx.play()
       audioCtx.onCanplay(() => {
-        this.setState({
-          voiceDuration: audioCtx.duration
-        })
+        this.setState({ voiceDuration: audioCtx.duration })
       })
     }
   }
@@ -76,7 +75,8 @@ class ChatDialog extends Component {
       data,
       title,
       mediaType,
-      timestamp
+      timestamp,
+      showTime
     } = this.props
 
     let dialogHTML
@@ -114,7 +114,7 @@ class ChatDialog extends Component {
     }
 
     let dialogTimestamp
-    if (timestamp) {
+    if (showTime) {
       const timeFormat = format(timestamp)
       dialogTimestamp = (
         <View className="chat-dialog-timestamp-wrap">
