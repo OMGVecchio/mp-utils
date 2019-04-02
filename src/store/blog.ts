@@ -1,7 +1,7 @@
-import Taro from '@tarojs/taro'
 import { observable } from 'mobx'
 
 import { SERVER_HTTP } from '../utils/config'
+import { request } from '../utils/request'
 
 const blogStore = observable({
   articleList: [],
@@ -13,7 +13,7 @@ const blogStore = observable({
       return
     }
     this.isFetchingList = true
-    Taro.request({
+    request({
       url: `${SERVER_HTTP}/api/article`,
       dataType: 'JSON',
       complete: () => {
@@ -30,7 +30,7 @@ const blogStore = observable({
       return
     }
     this.isFetchingDetail = true
-    Taro.request({
+    request({
       url: `${SERVER_HTTP}/api/article/${articleId}`,
       dataType: 'JSON',
       complete: () => {

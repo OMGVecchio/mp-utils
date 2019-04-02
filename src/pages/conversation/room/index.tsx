@@ -2,6 +2,7 @@ import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { ScrollView, View, Image, Textarea, Button } from '@tarojs/components'
 import { AtIcon } from 'taro-ui'
+import { observer, inject } from '@tarojs/mobx'
 
 import ChatDialog from '../../../components/chat/dialog'
 import EmojiPanel from '../../../components/chat/emoji'
@@ -12,33 +13,44 @@ import { SERVER_HTTP } from '../../../utils/config'
 import {
   MSG_TEXT,
   MSG_PICT,
-  MSG_AUDI
+  MSG_AUDI,
+  OPENID
 } from '../../../utils/const'
 
 import './index.scss'
 
+import { FriendInfoType } from '../index'
 type PageStateProps = {
+  chatStore: {
+    chatMapList: {
+      [to: string]: HistoryType[]
+    },
+    setChat: Function,
+    fillHistory: Function
+  }
 }
-
 type StateType = {
   msg: string,
   showIcon: boolean,
   msgIsCommon: boolean,
   isRecordIng: boolean,
   currentDialogId: string,
-  history: {
-    title: string,
-    data: string,
-    mediaType: number,
-    own: boolean,
-    timestamp: number
-  }[]
+  friendInfo: {} | FriendInfoType,
+  openId: string
 }
-
+export type HistoryType = {
+  title: string,
+  data: string,
+  mediaType: number,
+  timestamp: number,
+  avatar: string
+}
 interface ChatSingle {
-  props: PageStateProps;
+  props: PageStateProps
 }
 
+@inject('chatStore')
+@observer
 class ChatSingle extends Component {
 
   config: Config = {
@@ -51,35 +63,21 @@ class ChatSingle extends Component {
     msgIsCommon: true,
     isRecordIng: false,
     currentDialogId: '',
-    history: []
+    friendInfo: {},
+    openId: ''
   }
 
   recordStartTimestamp: null | number = null
 
   componentDidMount () {
-    Taro.setNavigationBarTitle({ title: this.$router.params.id })
-    socket.on('single-message', res => {
-      const {
-        data,
-        mediaType = 1,
-        from,
-        timestamp = Date.now()
-      } = res
-      this.setState({
-        currentDialogId: this.getDialogIdTag(timestamp),
-        history: this.state.history.concat({
-          title: from,
-          data,
-          mediaType,
-          own: false,
-          timestamp
-        })
-      })
+    const friendInfo = (JSON.parse(decodeURIComponent(this.$router.params.info))) as FriendInfoType
+    const openId = Taro.getStorageSync(OPENID)
+    this.props.chatStore.fillHistory(friendInfo.openId)
+    this.setState({
+      friendInfo,
+      openId
     })
-  }
-
-  componentWillUnmount () {
-    socket.off('single-message')
+    Taro.setNavigationBarTitle({ title: friendInfo.nickName })
   }
 
   getDialogIdTag = timestamp => `id${timestamp}`
@@ -90,54 +88,39 @@ class ChatSingle extends Component {
   }
 
   sendMsg = () => {
-    const { msg } = this.state
-    const to = this.$router.params.id
-    const own = true
+    const { msg, friendInfo } = this.state
+    const { openId: to, avatarUrl } = friendInfo as FriendInfoType
     const timestamp = Date.now()
     const param = {
       msg,
       to,
       timestamp,
-      mediaType: MSG_TEXT
+      mediaType: MSG_TEXT,
+      avatar: avatarUrl
     }
-    socket.emit('single-message', param)
+    socket.emit('message', param)
     this.setState({
       msg: '',
-      currentDialogId: this.getDialogIdTag(timestamp),
-      history: this.state.history.concat({
-        title: to,
-        data: msg,
-        mediaType: MSG_TEXT,
-        own,
-        timestamp
-      })
+      currentDialogId: this.getDialogIdTag(timestamp)
     })
   }
 
   uploadData = (filePath, mediaType) => {
+    const { friendInfo, openId } = this.state
+    const { openId: to, avatarUrl } = friendInfo as FriendInfoType
     Taro.uploadFile({
       url: `${SERVER_HTTP}/api/socket/msg/media`,
       name: 'media',
       formData: {
-        to: this.$router.params.id,
-        from: socket.id,
-        mediaType
+        to,
+        from: openId,
+        mediaType,
+        avatar: avatarUrl
       },
       filePath: filePath,
-      success: ({ data }) => {
-        const dataJson = JSON.parse(data)
-        const { data: imgUrl } = dataJson
+      success: () => {
         const timestamp = Date.now()
-        this.setState({
-          currentDialogId: this.getDialogIdTag(timestamp),
-          history: this.state.history.concat({
-            title: this.$router.params.id,
-            data: imgUrl,
-            mediaType,
-            own: true,
-            timestamp
-          })
-        })
+        this.setState({ currentDialogId: this.getDialogIdTag(timestamp) })
         if (mediaType === MSG_TEXT) {
           this.setState({ msg: '' })
         }
@@ -182,31 +165,38 @@ class ChatSingle extends Component {
 
   render () {
     const {
-      history,
       showIcon,
       msg,
       msgIsCommon,
-      isRecordIng
+      isRecordIng,
+      friendInfo,
+      openId
     } = this.state
-    const chatDialogHTML = history.map((dialogItem, index) => {
+    const { chatStore: { chatMapList } } = this.props
+    const { openId: fromOpenId } = friendInfo as FriendInfoType
+    const chatList = chatMapList[openId] || []
+    const chatDialogHTML = chatList.map((dialogItem, index) => {
       const {
         title,
         data,
         mediaType,
-        own,
-        timestamp
+        timestamp,
+        avatar
       } = dialogItem
-      const showTime = index === 0 || (timestamp - history[index - 1].timestamp > 1000 * 60 * 5)
+      const showTime = index === 0
+        ? true
+        : (timestamp - chatList[index - 1].timestamp > 1000 * 60 * 5)
       return (
         <ChatDialog
           id={this.getDialogIdTag(timestamp)}
           key={timestamp}
           title={title}
-          own={own}
+          own={openId === fromOpenId}
           data={String(data)}
           mediaType={mediaType}
           timestamp={timestamp}
           showTime={showTime}
+          avatar={avatar}
         />
       )
     })

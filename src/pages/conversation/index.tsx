@@ -8,29 +8,41 @@ import {
   Video
 } from '@tarojs/components'
 import { AtList, AtListItem } from "taro-ui"
-
-import socket from '../../utils/socket'
+import { observer, inject } from '@tarojs/mobx'
 
 import './index.scss'
 
 type PageStateProps = {
+  chatStore: {
+    friendsList: FriendInfoType[]
+  }
 }
-
 type StateType = {
   photoPath: string,
   recordPath: string,
   isRecording: boolean,
   friends: string[]
 }
-
+export type FriendInfoType = {
+  avatarUrl: string,
+  city: string,
+  country: string,
+  gender: number,
+  language: string,
+  nickName: string,
+  province: string,
+  openId: string
+}
 interface Conversation {
   props: PageStateProps;
 }
 
+@inject('chatStore')
+@observer
 class Conversation extends Component {
 
   config: Config = {
-    navigationBarTitleText: '即时通讯，音视频难搞'
+    navigationBarTitleText: '在线列表'
   }
 
   state: StateType = {
@@ -40,22 +52,8 @@ class Conversation extends Component {
     friends: []
   }
 
-  socket: any = null
-
-  componentDidMount () {
-    socket.emit('newMember')
-    socket.on('refreshFriendList', friends => {
-      console.log('refreshFriendList')
-      this.setState({ friends })
-    })
-  }
-
-  componentWillUnmount () {
-    socket.off('refreshFriendList')
-  }
-
-  chatSingle = (friendId) => {
-    Taro.navigateTo({ url: `/pages/conversation/room/index?id=${friendId}` })
+  chatSingle = friendInfo => {
+    Taro.navigateTo({ url: `/pages/conversation/room/index?info=${encodeURIComponent(JSON.stringify(friendInfo))}` })
   }
 
   // takePhoto = () => {
@@ -87,12 +85,18 @@ class Conversation extends Component {
   // }
 
   render () {
-    const { friends } = this.state
-    const friendsHTML = friends.filter(friend => friend !== socket.id).map(friend => {
+    const { friendsList = [] } = this.props.chatStore
+    const friendsHTML = friendsList.map(friend => {
+      const {
+        openId,
+        nickName,
+        avatarUrl
+      } = friend
       return (
         <AtListItem
-          title={friend}
-          key={friend}
+          key={openId}
+          title={nickName}
+          thumb={avatarUrl}
           onClick={() => this.chatSingle(friend) }
         />
       )

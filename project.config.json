@@ -77,7 +77,7 @@
 					"id": 6,
 					"name": "聊天室",
 					"pathName": "pages/conversation/room/index",
-					"query": "id=13123123",
+					"query": "info=%7B%22nickName%22%3A%22%E7%8E%8B%E8%B7%AF%E9%A3%9E%22%2C%22gender%22%3A1%2C%22language%22%3A%22zh_CN%22%2C%22city%22%3A%22Jiangbei%22%2C%22province%22%3A%22Chongqing%22%2C%22country%22%3A%22China%22%2C%22avatarUrl%22%3A%22https%3A%2F%2Fwx.qlogo.cn%2Fmmopen%2Fvi_32%2FeicdqxyAqOiaqoKr4R94kHwTDHHSZov1IYAQp2cvVTKBzRwq0AcUj1uziaqVo0pziauSZSxUd4VSDzXzSicQDWyElPg%2F132%22%2C%22openId%22%3A%22oEMQD5iRx1oaS5U-bZgPJnUMCWrM%22%7D&__key_=15542017348112",
 					"scene": null
 				}
 			]

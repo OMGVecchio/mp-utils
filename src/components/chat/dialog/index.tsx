@@ -19,7 +19,8 @@ type PageStateProps = {
   title: string,
   mediaType: number,
   timestamp: number,
-  showTime: boolean
+  showTime: boolean,
+  avatar: string
 }
 
 type StateType = {
@@ -73,10 +74,10 @@ class ChatDialog extends Component {
     const {
       own,
       data,
-      title,
       mediaType,
       timestamp,
-      showTime
+      showTime,
+      avatar
     } = this.props
 
     let dialogHTML
@@ -130,7 +131,7 @@ class ChatDialog extends Component {
        {dialogTimestamp}
         <View className={classnames('chat-dialog', own && 'reverse')}>
           <View className="chat-dialog-avatar">
-            <AtAvatar size="small" text={title} />
+            <AtAvatar size="small" image={avatar} />
           </View>
           {dialogHTML}
         </View>

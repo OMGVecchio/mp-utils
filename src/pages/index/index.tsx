@@ -99,9 +99,9 @@ class Index extends Component {
   componentWillReact () { }
 
   componentDidMount () {
-    const { sessionStore } = this.props
+    const { sessionStore: { setAuth } } = this.props
     if (!Taro.getStorageSync(SESSION_KEY)) {
-      Taro.login({ success: ({ code }) => sessionStore.setAuth({ code }) })
+      Taro.login({ success: ({ code }) => setAuth({ code }) })
     }
     const userInfo = Taro.getStorageSync(USER_INFO)
     if (userInfo) {
@@ -123,8 +123,8 @@ class Index extends Component {
   }
 
   getUserInfo = userInfo => {
-    const { sessionStore } = this.props
-    sessionStore.setUserInfo(userInfo.detail.userInfo)
+    const { sessionStore: { setUserInfo } } = this.props
+    setUserInfo(userInfo.detail)
     this.setState({ hasLogin: true })
   }
 
