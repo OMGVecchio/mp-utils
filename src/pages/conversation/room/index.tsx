@@ -10,12 +10,7 @@ import EmojiPanel from '../../../components/chat/emoji'
 import bgImg from '../../../assets/images/chat/bg.jpg'
 import socket from '../../../utils/socket'
 import { SERVER_HTTP } from '../../../utils/config'
-import {
-  MSG_TEXT,
-  MSG_PICT,
-  MSG_AUDI,
-  OPENID
-} from '../../../utils/const'
+import { MSG_TEXT, MSG_PICT, MSG_AUDI, OPENID } from '../../../utils/const'
 
 import './index.scss'
 
@@ -23,10 +18,9 @@ import { FriendInfoType } from '../index'
 type PageStateProps = {
   chatStore: {
     chatMapList: {
-      [to: string]: HistoryType[]
+      [roomId: string]: HistoryType[]
     },
-    setChat: Function,
-    fillHistory: Function
+    setChat: Function
   }
 }
 type StateType = {
@@ -67,12 +61,12 @@ class ChatSingle extends Component {
     openId: ''
   }
 
+
   recordStartTimestamp: null | number = null
 
   componentDidMount () {
     const friendInfo = (JSON.parse(decodeURIComponent(this.$router.params.info))) as FriendInfoType
     const openId = Taro.getStorageSync(OPENID)
-    this.props.chatStore.fillHistory(friendInfo.openId)
     this.setState({
       friendInfo,
       openId
@@ -81,6 +75,20 @@ class ChatSingle extends Component {
   }
 
   getDialogIdTag = timestamp => `id${timestamp}`
+
+  canSendMsg = (msg: string) => {
+    if (!msg) {
+      return false
+    }
+    const isAllSpace = msg.split('').every(char => {
+      const code = char.charCodeAt(0)
+      if (code !== 10 && code !== 32) {
+        return false
+      }
+      return true
+    })
+    return !isAllSpace
+  }
 
   changeMsg = e => {
     const { value: msg } = e.target
@@ -108,6 +116,7 @@ class ChatSingle extends Component {
   uploadData = (filePath, mediaType) => {
     const { friendInfo, openId } = this.state
     const { openId: to, avatarUrl } = friendInfo as FriendInfoType
+    const timestamp = Date.now()
     Taro.uploadFile({
       url: `${SERVER_HTTP}/api/socket/msg/media`,
       name: 'media',
@@ -115,7 +124,8 @@ class ChatSingle extends Component {
         to,
         from: openId,
         mediaType,
-        avatar: avatarUrl
+        avatar: avatarUrl,
+        timestamp
       },
       filePath: filePath,
       success: () => {
@@ -170,11 +180,13 @@ class ChatSingle extends Component {
       msgIsCommon,
       isRecordIng,
       friendInfo,
-      openId
+      openId,
+      currentDialogId
     } = this.state
     const { chatStore: { chatMapList } } = this.props
     const { openId: fromOpenId } = friendInfo as FriendInfoType
     const chatList = chatMapList[openId] || []
+    const totalCount = chatList.length
     const chatDialogHTML = chatList.map((dialogItem, index) => {
       const {
         title,
@@ -186,9 +198,13 @@ class ChatSingle extends Component {
       const showTime = index === 0
         ? true
         : (timestamp - chatList[index - 1].timestamp > 1000 * 60 * 5)
+      const id = this.getDialogIdTag(timestamp)
+      if ((index === totalCount - 1) && (currentDialogId !== id)) {
+        this.setState({ currentDialogId: id })
+      }
       return (
         <ChatDialog
-          id={this.getDialogIdTag(timestamp)}
+          id={id}
           key={timestamp}
           title={title}
           own={openId === fromOpenId}
@@ -206,7 +222,7 @@ class ChatSingle extends Component {
         <ScrollView
           scrollY
           scrollIntoView={this.state.currentDialogId}
-          scrollWithAnimation={true}
+          scrollWithAnimation={false}
           className="conversation-dialog-panel"
           onClick={ () => showIcon && this.setState({ showIcon: false }) }
         >
@@ -246,28 +262,17 @@ class ChatSingle extends Component {
               onClick={() => this.setState({ showIcon: true })}
             />
             {
-              msg ? (
-                <Button
-                  className="conversation-option-send conversation-option-item"
-                  onClick={this.sendMsg}
-                >
+              this.canSendMsg(msg) ? (
+                <Button className="conversation-option-send conversation-option-item" onClick={this.sendMsg}>
                   发送
                 </Button>
               ) : (
-                <AtIcon
-                  className="conversation-icon"
-                  value="add-circle"
-                  onClick={this.sendFile}
-                />
+                <AtIcon className="conversation-icon" value="add-circle" onClick={this.sendFile} />
               )
             }
           </View>
         </View>
-        {
-          showIcon && (
-            <EmojiPanel select={emoji => this.selectEmoji(emoji)} />
-          )
-        }
+        { showIcon && ( <EmojiPanel select={emoji => this.selectEmoji(emoji)} /> ) }
       </View>
     )
   }

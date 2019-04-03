@@ -9,39 +9,34 @@ const chatStore = observable({
   setFriendsList(friendsList) {
     this.friendsList = friendsList
   },
-  setChat(from, chatData) {
-    const chatToList = this.chatMapList[from] || []
-    const newChatList = chatToList.concat(chatData)
+  setChat(roomId, chatData) {
+    const chatList = this.chatMapList[roomId] || []
+    const newChatList = chatList.concat(chatData)
     this.chatMapList = {
       ...this.chatMapList,
-      [from]: newChatList
+      [roomId]: newChatList
     }
-    this.setChatCache(from, chatData)
+    this.setChatCache(roomId, chatData)
   },
-  setChatCache(from, chatData) {
-    const allChatData = this.getChatCache()
-    const fromChatData = allChatData[from] || []
-    fromChatData.push(chatData)
-    allChatData[from] = fromChatData
-    Taro.setStorageSync(CHAT_HISTORY, allChatData)
+  setChatCache(roomId, chatData) {
+    const allChatHistory = this.getChatCache()
+    const roomChatHistory = allChatHistory[roomId] || []
+    roomChatHistory.push(chatData)
+    allChatHistory[roomId] = roomChatHistory
+    Taro.setStorageSync(CHAT_HISTORY, allChatHistory)
   },
-  getChatCache(from) {
-    const allChatData = Taro.getStorageSync(CHAT_HISTORY) || {}
-    if (from) {
-      return allChatData[from] || []
+  getChatCache(roomId) {
+    const allChatHistory = Taro.getStorageSync(CHAT_HISTORY) || {}
+    if (roomId) {
+      return allChatHistory[roomId] || []
     } else {
-      return allChatData
+      return allChatHistory
     }
   },
-  // todo 先测试历史记录主逻辑
-  fillHistory(from, page = 1, pageSize = 10) {
-    const allChatData = this.getChatCache()
-    const fromChatData = allChatData[from] || []
-    const newChatList = this.chatMapList[from] || []
-    fromChatData.unshift(newChatList)
-    allChatData[from] = fromChatData
+  fillChatDataWithHistory() {
+    const allChatHistory = this.getChatCache()
     this.chatMapList = {
-      ...allChatData
+      ...allChatHistory
     }
   }
 })

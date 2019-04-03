@@ -14,7 +14,8 @@ import './index.scss'
 
 type PageStateProps = {
   chatStore: {
-    friendsList: FriendInfoType[]
+    friendsList: FriendInfoType[],
+    fillChatDataWithHistory: Function
   }
 }
 type StateType = {
@@ -50,6 +51,10 @@ class Conversation extends Component {
     recordPath: '',
     isRecording: false,
     friends: []
+  }
+
+  componentDidMount() {
+    this.props.chatStore.fillChatDataWithHistory()
   }
 
   chatSingle = friendInfo => {
