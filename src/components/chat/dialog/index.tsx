@@ -4,11 +4,8 @@ import { View, Image } from '@tarojs/components'
 import { AtAvatar, AtIcon } from 'taro-ui'
 import classnames from 'classnames'
 
-import {
-  MSG_TEXT,
-  MSG_PICT,
-  MSG_AUDI
-} from '../../../utils/const'
+import { SERVER_HTTP } from '../../../utils/config'
+import { MSG_TEXT, MSG_PICT, MSG_AUDI } from '../../../utils/const'
 import { format } from './time'
 
 import './index.scss'
@@ -91,21 +88,24 @@ class ChatDialog extends Component {
         break
       }
       case MSG_PICT: {
+        const thumbPictUrl = `${SERVER_HTTP}/api/pict-tool?pictPath=${encodeURIComponent(data)}&quality=20`
+        const fullPictUrl = `${SERVER_HTTP}${data}`
         dialogHTML = (
           <Image
-            src={data}
+            src={thumbPictUrl}
             className="chat-dialog-pict"
             mode="widthFix"
-            onClick={() => Taro.previewImage({ urls: [data] }) }
+            onClick={() => Taro.previewImage({ urls: [fullPictUrl] }) }
           />
         )
         break
       }
       default: {
+        const voiceUrl = `${SERVER_HTTP}${data}`
         dialogHTML = (
           <View
             className="chat-dialog-text chat-dialog-audi"
-            onClick={() => this.playVoice(data)}
+            onClick={() => this.playVoice(voiceUrl)}
           >
             {this.state.voiceDuration}''<AtIcon value="volume-plus" />
           </View>
