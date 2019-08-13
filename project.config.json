@@ -4,7 +4,7 @@
 	"description": "daily tools for the user",
 	"appid": "wxb7791d1e9388d9b3",
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": false,
 		"postcss": false,
 		"minified": false,
